@@ -44,12 +44,109 @@ name: main_title
 
 ---
 
+## Navigation 2 - BT Navigator Server
+
+Using a Behavior Tree XML as a control flow for navigation
+
+* Provided by [nav2_bt_navigator]
+* Read an XML description of the Behavior Tree
+* Allows to easily implement behavior to select the behavior of your robot
+* Communicate with Planners, Controllers and Recovery server
+* The parameter of **BtNavigator** node: 
+
+<img src="../static/bt_navigation_param.png" alt="bt_navigation_param" style="width:500px" class="image-center"/>
+
+---
+
+name: two_columns
+
+## Navigation 2 - What is a Behavior Tree ?
+
+* A Behavior Tree is a representation of a flow of decision and execution. [BehaviorTreeCpp](https://github.com/BehaviorTree/BehaviorTree.CPP)
+* Types of nodes:
+  * ControlNodes: have 1 to N children, e.g. SequenceNode, FallbackNode ... 
+  * DecoratorNodes: similar to the ControlNode, but can only have a single child.
+  * ActionNodes: leaves and do not have any children.
+  * ConditionNodes are equivalent to ActionNodes, but they should not alter the state of the system.
+
+  .cols[
+  .fifty[
+
+ Including: SequenceNode, DecoratorNodes, ConditionNode
+
+  <img src="../static/decoratorenterroom.png" alt="bt_example" style="width:350px" class="image-center"/>
+
+    ]
+  
+  .fifty[
+
+  Including: FallbackNode,SequenceNode, ConditionNodes
+
+  <img src="../static/fallbackbasic.png" alt="bt_example" style="width:380px" class="image-center"/>
+
+    ]
+]
+
+<!-- source: https://www.behaviortree.dev/bt_basics/ -->
+---
+
+## Navigation 2 - Navigation Behavior Trees
+
+Example: Navigate with recovery
+
+<img src="../static/Nav2_BT.png" alt="Nav2_BT" style="width:900px" class="image-center"/>
+
+
+---
+
+## Navigation 2 - Behavior Tree XML format
+
+<img src="../static/nav2_bt_xml.png" alt="nav2_bt_xml" style="width:900px" class="image-center"/>
+
+---
+
+## Navigation 2 - More Examples of Navigation Behavior Tree XML:
+
+[nav2_bt_navigator/behavior_trees](https://github.com/ros-planning/navigation2/tree/main/nav2_bt_navigator/behavior_trees)
+
+---
+
 ## Navigation 2 - Precondition
 
-* Map + Map Server
+* Map
 
-* AMCL (Adaptative Monte Carlo Localization)
+* AMCL
 
+---
+
+## Navigation 2 - Map Server
+
+* [nav2_map_server](https://github.com/ros-planning/navigation2/tree/main/nav2_map_server)
+* map_server: loading the map, serving a static map on the "/map" topic.
+* map_saver: saving the map into a file (`ros2 run nav2_map_server map_saver_cli -f my_map`)
+
+Step 1: Create a parameter file with the name of the map yaml OR Set the same params in the launch file 
+```yaml
+# map_server_params.yaml
+map_server:
+    ros__parameters:
+        frame_id: map
+        topic_name: map
+        use_sim_time: false
+        yaml_filename: maps/map.yaml
+```
+
+Step 2: Run map server with this file passed as a param  
+```bash
+ros2 run nav2_map_server map_server --ros-args --params-file map_server_params.yaml
+```
+
+Step 3: Transition through configure to active through CLI OR The launch filter
+```bash
+ros2 lifecycle set /map_server configure
+ros2 lifecycle set /map_server activate
+(ros2 lifecycle list /map_server)
+```
 ---
 
 ## Navigation 2 - Map Server
@@ -158,6 +255,11 @@ Some important to set:
 
   * Plugins to enable your own custom algorithms and behaviors (**[nav2_core]**)
 
+---
+
+## Navigation 2 - Planning Overview
+  
+  <img src="../static/navigation_bt_plan.png" alt="navigation_complete" style="width:900px" class="image-center"/>
 ---
 
 ## Navigation 2 - Planning Overview
@@ -409,6 +511,13 @@ Define the recovery actions that the robot can perform.
 * Stop - Stop the robot
 
 
+---
+
+## Navigation 2 - Life Cycle Manager
+
+The nodes within NAV2 are managed by the LifeCycle Manager of ROS 2 (see Basic Slides).
+
+<img src="../static/lifecycle_manager.png" alt="lifecycle_manager" style="width:700px" class="image-center"/>
 
 ---
 
@@ -445,7 +554,7 @@ Increase quality using:
 
 ## Navigation 2 - Thanks
 
-<img src="../static/thanks_nav2.png" alt="thanks_nav2" style="width:700px" class="image-center"/>
+<img src="../static/thanks_nav2.png" alt="thanks_nav2" style="width:900px" class="image-center"/>
 
 
 ---
