@@ -4,11 +4,12 @@
 
 ## Introduction
 
-As we understood from the lectures, nodes are the fundamental units in ROS 2 which are usually written to perform a specific task. They can be created in a few different ways such as- 
+As we understood from the lectures, nodes are the fundamental units in ROS2 which are usually written to perform a specific task. They can be created in a few different ways, some of them are: 
+
 1. As simple in-line code in a script,
 2. As local functions, and
 3. As class objects   
-... among others
+
 
 We will be using the 3rd method, though it is the more complex, so as to get better used to this concept.
 
@@ -16,12 +17,13 @@ We start by writing two separate simple nodes, one that includes only publisher 
 
 The first step is to create a python package to house all our nodes. You can do so using the command
 ```bash
-$ ros2 pkg create --build-type ament_python <package_name>
+ros2 pkg create --build-type ament_python <package_name>
 ```
 
-(Make sure first that ROS 2 is sourced in every new terminal)
+***Note: Ensure first that ROS2 is sourced in every new terminal***
 
-Make sure you run this command in the *src* directory of your workspace. You can use any package name you want, but for reference in this document, we call it `wshop_nodes`.
+- Make sure you run this command in the *src* directory of your workspace. You can use any package name you want, but for reference in this document, we call it `wshop_nodes`. 
+
 
 ## 1. Publisher Node
 
@@ -98,7 +100,7 @@ class MinimalPublisher(Node):
         self.i = 0
 ```
 As explained above, we create a subclass of type `MinimalPublisher` using the base class `Node`.         
-In the constructor `__init__()`, we pass the name of the node that we ish to assign to the constructer of the parent class using `super()`. The parent class `Node` takes care of actually assigning this string as a name.    
+In the constructor `__init__()`, we pass the name of the node that we wish to assign to the constructer of the parent class using `super()`. The parent class `Node` takes care of actually assigning this string as a name.    
 `self.publisher_ = self.create_publisher(String, 'topic', 10)` This line actually creates a publisher, using the message type `String` that we imported, with the name `topic` that we choose and having a queue size of `10`. Queue size is the size of the output buffer. The commands used till now are typical when creating a subscriber. What follows next is only logic that is relevant to this node, and you may implement this in any way depending on your requirements.
 
 ```Python
@@ -242,14 +244,14 @@ self.subscription = self.create_subscription(
 
 The first parameter to pass to the function is the msg type, the second is the name of the topic - this should be the same as declared in the publisher, the third is the callback function for the subscriber and the last is the message buffer size.
 
-The nxt part to understand is the callback function.
+The next part to understand is the callback function.
 
 ```Python
 def listener_callback(self, msg):
     self.get_logger().info('I heard: "%s"' % msg.data)
 ```
 
-The parameter that is automatically passed to this dunction is the incoming message. In this case, it is simply printed to console.
+The parameter that is automatically passed to this function is the incoming message. In this case, it is simply printed to console.
 
 ### 2.2 Declaring the executable
 
@@ -267,25 +269,30 @@ entry_points={
 
 Before building, it is always good to check if all dependencies have been installed. We execute the following from the **base workspace folder** (i.e. just above the src folder of your **workspace**):
 
-`rosdep install --from-paths src --ignore-src -r --rosdistro <distro> -y`   
-Substitute <distro> with the current version of ROS 2 you are running on. Ex: `foxy`
+```bash
+rosdep install --from-paths src --ignore-src -r --rosdistro <distro> -y   
+```
+Substitute <distro> with the current version of ROS2 you are running on. Ex: `jazzy`
+
 
 From the same location, build the workspace:
-
-`colcon build --symlink-install`
-
+ 
+colcon build --symlink-install
+```
 Now we need to source this workspace in order to be able to discover the executable that we just built:
 
-`source install/local_setup.bash`
-
+```bash
+source install/local_setup.bash
+```
 Finally, we are ready to run an executable. Recalling from section **1.3**, the name we assigned to the executable with the publisher is `talker`. So we run this: 
 
-`ros2 run wshop_nodes talker`
-
-Open another terminal and similarly source ROS 2 and this workspace to run the subscriber executable:
-
-`ros2 run wshop_nodes listener`
-
+```bash
+ros2 run wshop_nodes talker
+```
+Open another terminal and similarly source ros2 and this workspace to run the subscriber executable:
+```bash
+ros2 run wshop_nodes listener
+````
 
 
 ## 4 Composed nodes
