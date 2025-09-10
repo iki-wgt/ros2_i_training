@@ -1,7 +1,7 @@
 # Cheat sheet
 
 ###### ROS 2 package installation syntax:   
-`sudo apt install ros-foxy-<pkg_name>`
+`sudo apt install ros-humble-<pkg_name>`
 
 ###### Basic ROS 2 command structure:   
 `ros2 <main_command> <sub_command> [--options] <list_of_arguments>`    
@@ -14,11 +14,11 @@ You can use `| grep <string>` to filter results using a string.
 
 ## Commonly used commands
 Sourcing ROS 2:   
-* `source /opt/ros/foxy/setup.bash`
+* `source /opt/ros/humble/setup.bash`
 
 Alias:
 >WARNING: Use with caution!
-* `echo "alias source_foxy=source /opt/ros/foxy/setup.bash" >> .bashrc`  
+* `echo "alias source_humble=source /opt/ros/humble/setup.bash" >> .bashrc`  
 
 Packages introspection:    
 * `ros2 pkg list` - list all available packages   
