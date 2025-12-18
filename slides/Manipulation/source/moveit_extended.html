@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Moveit Extended</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../common/css/rostraining_slides.css">
+  </head>
+<body>
+<textarea id="source">
+
+layout: true
+<div class="header"><img src="https://rosin-project.eu/wp-content/uploads/rosin_ack_logo_wide.png" style="background-color:transparent"/></div>
+<div class="footer"><img src="https://www.ipa.fraunhofer.de/content/dam/ipa/ipa.svg" /><p>&copy; Fraunhofer IPA / This work is licensed under a Creative Commons Attribution 4.0 International License. Enhanced by: <a href="https://iki.rwu.de">iki.rwu.de</a> <img style="position:relative; left: 50px; height:25px; margin-top:-0px;" src="../../common/logo/iki.png" /> </p>
+</div>
+<div class="triangle"></div>
+---
+ 
+# MOVEIT Extended Concepts
+
+![evolution width:900](../static/plan_scene2.png)
+
+---
+
+## Constraint planning
+
+Used to 
+- constrain robot motion
+- define planning goals
+
+```cpp
+kinematic_constraints::JointConstraint
+kinematic_constraints::OrientationConstraint
+kinematic_constraints::PositionConstraint
+kinematic_constraints::VisibilityConstraint
+```
+https://www.youtube.com/watch?v=qEketOee7_g
+
+---
+
+## Constraint planning
+
+e.g. Planning with Path Constraints specified for a link on robot
+
+```cpp
+moveit_msgs::OrientationConstraint ocm;
+ocm.link_name = "panda_link7";
+ocm.header.frame_id = "panda_link0";
+ocm.orientation.w = 1.0;
+ocm.absolute_x_axis_tolerance = 0.1;
+ocm.absolute_y_axis_tolerance = 0.1;
+ocm.absolute_z_axis_tolerance = 0.1;
+```
+set this a path constraint for the planning group
+```cpp
+moveit_msgs::Constraints test_constraints;
+test_constraints.orientation_constraints.push_back(ocm);
+move_group_interface.setPathConstraints(test_constraints);
+```
+
+---
+
+## Cartesian planning
+
+- end effector follows an exact path along a surface (welding and painting applications)
+- list of waypoints specified for the end-effector to go through
+- MoveIt! now supports real-time & global, collision-aware cartesian planning
+
+#### Desirable properties
+- Completeness, Underconstrained, Planning ahead, Realtime
+
+<img src="../static/cartesian_libraries.png" alt="Cartesian Planning" style="width:600px"  class="image-center"/>
+
+https://picknik.ai/cartesian%20planners/moveit/motion%20planning/2021/01/07/guide-to-cartesian-planners-in-moveit.html
+---
+
+## Cartesian planning
+
+```cpp
+std::vector<geometry_msgs::Pose> waypoints;
+waypoints.push_back(start_pose);
+
+geometry_msgs::Pose way_pose;
+waypoints.push_back(way_pose);
+
+way_pose.position.y -= 0.2;
+waypoints.push_back(way_pose);  // right
+
+way_pose.position.z += 0.2;
+way_pose.position.y += 0.2;
+way_pose.position.x -= 0.2;
+waypoints.push_back(way_pose);  // up and left
+```
+now compute trajectory with interpolation
+```cpp
+moveit_msgs::RobotTrajectory trajectory;
+const double jump_threshold = 0.0;
+const double eef_step = 0.01;
+double fraction = move_group_interface.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+```
+
+https://ros-planning.github.io/moveit_tutorials/doc/move_group_interface/move_group_interface_tutorial.html#cartesian-paths
+
+---
+
+## Getting involved
+
+https://github.com/ros-planning/moveit2
+
+- Adding New Features
+- Financial contributions via code sprints and grants
+- Enhancing Documentation
+- Reporting & Fixing Bugs
+
+---
+
+# Thank you! 
+
+</textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+<script>
+  var slideshow = remark.create({ratio: "16:9"});
+</script>
+</body>
+</html>
+
